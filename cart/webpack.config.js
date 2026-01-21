@@ -3,30 +3,35 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
-  entry: "./src/index.tsx",
   mode: "production",
+
+  entry: "./src/index.tsx",
+
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "auto",
     clean: true
   },
+
   resolve: {
-    extensions: [".tsx", ".ts", ".js"]
+    extensions: [".ts", ".tsx", ".js"]
   },
+
   module: {
     rules: [
       {
         test: /\.tsx?$/,
+        exclude: /node_modules/,
         use: {
           loader: "ts-loader",
           options: {
-            transpileOnly: true
+            transpileOnly: true   // ✅ NO TypeScript type checking in CI
           }
-        },
-        exclude: /node_modules/
+        }
       }
     ]
   },
+
   plugins: [
     new ModuleFederationPlugin({
       name: "cart",
@@ -35,10 +40,11 @@ module.exports = {
         "./Cart": "./src/Cart"
       },
       shared: {
-        react: { singleton: true },
-        "react-dom": { singleton: true }
+        react: { singleton: true, requiredVersion: false },
+        "react-dom": { singleton: true, requiredVersion: false }
       }
     }),
+
     new HtmlWebpackPlugin({
       template: "./public/index.html"
     })
