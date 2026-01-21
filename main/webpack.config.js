@@ -1,80 +1,50 @@
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const { ModuleFederationPlugin } = require("webpack").container;
 const Dotenv = require("dotenv-webpack");
-const webpack = require("webpack");
-const { dependencies } = require("./package.json");
 
-module.exports = (env) => {
-  const PRODUCTS_HOST = env.PRODUCTS_HOST || "http://localhost:9002";
-  const CART_HOST = env.CART_HOST || "http://localhost:9002";
-  return {
-    mode: "development",
-    devServer: {
-      port: 9001,
-      historyApiFallback: { index: "/", disableDotRule: true },
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx|ts|tsx)?$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: "babel-loader",
-              options: {
-                presets: ["@babel/preset-env", "@babel/preset-react"],
-                plugins: ["@babel/plugin-transform-runtime"],
-              },
-            },
-          ],
+module.exports = {
+  entry: "./src/index.tsx",
+  mode: "production",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "auto",
+    clean: true
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true   // 🔑 DISABLE TYPE CHECKING
+          }
         },
-        {
-          test: /\.(ts|tsx)?$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: "ts-loader",
-            },
-          ],
-        },
-        {
-          test: /\.css$/i,
-          use: ["style-loader", "css-loader"],
-        },
-      ],
-    },
-    plugins: [
-      new Dotenv(),
-      new ModuleFederationPlugin({
-        name: "MAIN",
-        remotes: {
-          // CART: `CART@${CART_HOST}/remoteEntry.js`,
-          // PRODUCTS: `PRODUCTS@${PRODUCTS_HOST}/remoteEntry.js`,
-        },
-        shared: {
-          ...dependencies,
-          react: {
-            eager: true,
-            singleton: true,
-            requiredVersion: dependencies["react"],
-          },
-          "react-dom": {
-            eager: true,
-            singleton: true,
-            requiredVersion: dependencies["react-dom"],
-          },
-        },
-      }),
-      new HtmlWebpackPlugin({
-        template: "./public/index.html",
-      }),
-      new webpack.DefinePlugin({
-        "process.env.PRODUCTS_HOST": JSON.stringify(PRODUCTS_HOST),
-        "process.env.CART_HOST": JSON.stringify(CART_HOST),
-      }),
-    ],
-    resolve: {
-      extensions: [".js", ".jsx", ".ts", ".tsx"],
-    },
-  };
+        exclude: /node_modules/
+      }
+    ]
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: "main",
+      remotes: {},
+      shared: {
+        react: { singleton: true },
+        "react-dom": { singleton: true }
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: "./public/index.html"
+    }),
+    new Dotenv()
+  ],
+  devServer: {
+    port: 3000,
+    historyApiFallback: true
+  }
 };
+

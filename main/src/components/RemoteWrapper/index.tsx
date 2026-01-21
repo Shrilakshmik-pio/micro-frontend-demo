@@ -1,15 +1,6 @@
-import React, { FC } from "react";
-import ErrorBoundary from "../ErrorBoundary";
+import React from "react";
 
-type Props = {
-  fallback?: string | React.ReactNode;
-  children: React.ReactNode;
-};
+export default function RemoteWrapper(props: any) {
+  return <>{props.children}</>;
+}
 
-const RemoteWrapper: FC<Props> = ({ children, fallback = null }) => (
-  <ErrorBoundary>
-    <React.Suspense fallback={fallback}>{children}</React.Suspense>
-  </ErrorBoundary>
-);
-
-export default RemoteWrapper;
