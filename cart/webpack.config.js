@@ -1,7 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
-const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -42,9 +41,6 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "./public/index.html"
-    }),
-    new Dotenv({
-      silent: true   // 🔑 THIS IS THE KEY FIX
     })
   ]
 };
