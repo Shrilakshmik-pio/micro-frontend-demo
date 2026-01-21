@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 export type CartItem = {
   id: string;
@@ -7,45 +7,36 @@ export type CartItem = {
   quantity: number;
 };
 
-export type CartState = {
+type CartState = {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (itemName: string) => void;
+  removeItem: (name: string) => void;
   clearCart: () => void;
 };
 
-export const useCartStore = create<CartState>((set) => ({
+export const useCartStore = create<CartState>()((set) => ({
   items: [],
 
-  addItem: (newItem: CartItem) =>
-    set((state: CartState) => {
-      const existingItem = state.items.find(
-        (item) => item.name === newItem.name
-      );
-
-      if (existingItem) {
+  addItem: (item) =>
+    set((state) => {
+      const existing = state.items.find(i => i.name === item.name);
+      if (existing) {
         return {
-          items: state.items.map((item) =>
-            item.name === newItem.name
-              ? { ...item, quantity: item.quantity + newItem.quantity }
-              : item
+          items: state.items.map(i =>
+            i.name === item.name
+              ? { ...i, quantity: i.quantity + item.quantity }
+              : i
           )
         };
       }
-
-      return {
-        items: [...state.items, newItem]
-      };
+      return { items: [...state.items, item] };
     }),
 
-  removeItem: (itemName: string) =>
-    set((state: CartState) => ({
-      items: state.items.filter((item) => item.name !== itemName)
+  removeItem: (name) =>
+    set((state) => ({
+      items: state.items.filter(i => i.name !== name)
     })),
 
-  clearCart: () =>
-    set(() => ({
-      items: []
-    }))
+  clearCart: () => set({ items: [] })
 }));
 

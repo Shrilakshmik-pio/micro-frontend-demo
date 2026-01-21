@@ -2,17 +2,15 @@
   "name": "micro-frontend-demo",
   "private": true,
   "workspaces": [
-    "main",
     "cart",
-    "products"
+    "host"
   ],
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint"
+  "resolutions": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "turbo": "^1.10.0"
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3"
   }
 }
-

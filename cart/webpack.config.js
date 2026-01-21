@@ -1,53 +1,32 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { ModuleFederationPlugin } = require("webpack").container;
+const path = require('path');
 
 module.exports = {
-  mode: "production",
-
-  entry: "./src/index.tsx",
+  entry: './src/index.tsx',
 
   output: {
-    path: path.resolve(__dirname, "dist"),
-    publicPath: "auto",
-    clean: true
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: 'auto'
   },
 
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    fullySpecified: false
   },
 
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "ts-loader",
-          options: {
-            transpileOnly: true   // ✅ NO TypeScript type checking in CI
-          }
-        }
+        test: /\.(ts|tsx)$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
   },
 
-  plugins: [
-    new ModuleFederationPlugin({
-      name: "cart",
-      filename: "remoteEntry.js",
-      exposes: {
-        "./Cart": "./src/Cart"
-      },
-      shared: {
-        react: { singleton: true, requiredVersion: false },
-        "react-dom": { singleton: true, requiredVersion: false }
-      }
-    }),
-
-    new HtmlWebpackPlugin({
-      template: "./public/index.html"
-    })
-  ]
+  devServer: {
+    port: 3001,
+    historyApiFallback: true
+  }
 };
 

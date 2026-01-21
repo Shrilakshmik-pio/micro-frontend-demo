@@ -1,28 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "ESNext",
-    "lib": ["DOM", "ES2018"],
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "react-jsx",
+
+    "module": "esnext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
 
     "strict": false,
+    "noImplicitAny": false,
     "skipLibCheck": true,
 
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-
-    "noEmit": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
-  ]
+  "include": ["src"]
 }
 

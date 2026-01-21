@@ -1,15 +1,14 @@
-import React from "react";
-// @ts-ignore
-import { BrowserRouter } from "react-router-dom";
-import Cart from "./components/CartButton";
+import React from 'react';
+import Button from '@mui/material/Button';
 
-export const App = () => {
+const App = () => {
   return (
-    <BrowserRouter>
-      <h1>Cart</h1>
-      <Cart />
-    </BrowserRouter>
+    <div style={{ padding: 20 }}>
+      <h2>Cart Micro-Frontend</h2>
+      <Button variant="contained">MUI Button</Button>
+    </div>
   );
 };
 
 export default App;
+
